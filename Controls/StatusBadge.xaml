@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Pastille de statut (En attente / Approuvé / Refusé) : équivalent du composant Figma "badge". -->
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TaskifyHR.Controls.StatusBadge">
+    <Border x:Name="Badge"
+            StrokeThickness="0"
+            Padding="12,4"
+            HorizontalOptions="Start">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="12" />
+        </Border.StrokeShape>
+        <Label x:Name="TextLabel" FontSize="12" />
+    </Border>
+</ContentView>

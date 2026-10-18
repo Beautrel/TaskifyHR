@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:TaskifyHR.Controls"
+             x:Class="TaskifyHR.Views.BalancePage"
+             Title="Solde de congés">
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="{Binding HeroTitle}" Style="{StaticResource TitleLabel}" />
+                <Label Text="{Binding HeroSubtitle}" Style="{StaticResource BodyLabel}" />
+            </VerticalStackLayout>
+
+            <!-- Chargement -->
+            <HorizontalStackLayout Spacing="8" IsVisible="{Binding IsLoading}">
+                <ActivityIndicator IsRunning="True" Color="{StaticResource Primary}"
+                                   HeightRequest="20" WidthRequest="20" />
+                <Label Text="Chargement de votre solde…" Style="{StaticResource CaptionLabel}"
+                       VerticalOptions="Center" />
+            </HorizontalStackLayout>
+
+            <!-- Erreur de chargement -->
+            <controls:StateView IsVisible="{Binding HasError}"
+                                Title="Erreur de chargement"
+                                TitleColor="{StaticResource Error}"
+                                Message="Impossible de charger votre solde. Vérifiez votre connexion."
+                                ActionText="Réessayer"
+                                ActionCommand="{Binding LoadCommand}" />
+
+            <!-- Compteurs -->
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="{Binding SummaryTitle}" Style="{StaticResource SubtitleLabel}" />
+                    <Label Text="{Binding PeriodText}" Style="{StaticResource BodyLabel}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Solde à zéro -->
+            <controls:StateView IsVisible="{Binding IsZero}"
+                                Title="Solde à zéro"
+                                TitleColor="{StaticResource TextPrimary}"
+                                Message="0 jour disponible. Vous n'avez plus de congés payés disponibles." />
+
+            <!-- Action principale (désactivée si solde à zéro) -->
+            <Button Text="Demander un congé"
+                    Command="{Binding RequestLeaveCommand}"
+                    Style="{StaticResource PrimaryButton}" />
+
+            <Label Text="Mes demandes" Style="{StaticResource SubtitleLabel}" Margin="0,8,0,0" />
+
+            <!-- Liste vide -->
+            <controls:StateView IsVisible="{Binding IsEmpty}"
+                                Title="Aucune demande pour le moment"
+                                TitleColor="{StaticResource TextPrimary}"
+                                Message="Vos demandes de congé apparaîtront ici." />
+
+            <!-- Liste des demandes : une carte par demande -->
+            <VerticalStackLayout Spacing="12" BindableLayout.ItemsSource="{Binding Requests}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}">
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="{Binding DateRange}" Style="{StaticResource SubtitleLabel}" />
+                                <Label Text="{Binding Detail}" Style="{StaticResource BodyLabel}" />
+                                <controls:StatusBadge Status="{Binding Status}" />
+                                <Label Text="{Binding Note}" Style="{StaticResource CaptionLabel}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

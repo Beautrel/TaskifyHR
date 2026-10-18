@@ -3,7 +3,7 @@ using TaskifyHR.Services;
 namespace TaskifyHR.Views;
 
 // Pages provisoires pour que les 4 onglets existent déjà.
-// On les remplacera une par une par de vrais écrans (XAML + ViewModel).
+// On les remplace une par une par de vrais écrans (XAML + ViewModel).
 
 public abstract class PlaceholderPage : ContentPage
 {
@@ -21,11 +21,6 @@ public abstract class PlaceholderPage : ContentPage
             }
         };
     }
-}
-
-public class BalancePage : PlaceholderPage
-{
-    public BalancePage() : base("Solde de congés") { }
 }
 
 public class PlanningPage : PlaceholderPage

@@ -15,6 +15,7 @@ public interface IAuthService
 public interface ILeaveService
 {
     Task<LeaveBalance> GetBalanceAsync();
+    Task<IReadOnlyList<LeaveRequest>> GetMyRequestsAsync();
 }
 
 public interface IAttendanceService

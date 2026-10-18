@@ -25,10 +25,46 @@ public class MockAuthService : IAuthService
 
 public class MockLeaveService : ILeaveService
 {
+    private readonly List<LeaveRequest> _requests = new()
+    {
+        new(Guid.NewGuid(), "Léa Martin", "Équipe Produit",
+            new DateOnly(2026, 10, 19), new DateOnly(2026, 10, 21), 3,
+            "Congés payés", "Repos personnel", LeaveStatus.Pending),
+        new(Guid.NewGuid(), "Léa Martin", "Équipe Produit",
+            new DateOnly(2026, 8, 5), new DateOnly(2026, 8, 14), 8,
+            "Congés payés", "Vacances", LeaveStatus.Approved, ValidatedBy: "Sophie Bernard"),
+    };
+
+    /// <summary>Mettre à true (temporairement) pour tester l'état "Solde à zéro".</summary>
+    public bool SimulateZeroBalance { get; set; }
+
+    /// <summary>Mettre à true (temporairement) pour tester l'état "Liste vide".</summary>
+    public bool SimulateEmptyList { get; set; }
+
+    /// <summary>Mettre à true (temporairement) pour tester l'état "Erreur de chargement".</summary>
+    public bool FailNext { get; set; }
+
     public async Task<LeaveBalance> GetBalanceAsync()
     {
         await Task.Delay(300);
-        return new LeaveBalance(Acquired: 20, Used: 8, Pending: 3); // mêmes chiffres que les maquettes
+        ThrowIfFailing();
+        return SimulateZeroBalance
+            ? new LeaveBalance(20, 20, 0, "juin 2026 – mai 2027")
+            : new LeaveBalance(20, 8, 3, "juin 2026 – mai 2027"); // mêmes chiffres que les maquettes
+    }
+
+    public async Task<IReadOnlyList<LeaveRequest>> GetMyRequestsAsync()
+    {
+        await Task.Delay(300);
+        ThrowIfFailing();
+        return SimulateEmptyList ? new List<LeaveRequest>() : _requests.ToList();
+    }
+
+    private void ThrowIfFailing()
+    {
+        if (!FailNext) return;
+        FailNext = false;
+        throw new HttpRequestException("Réseau indisponible (simulation)");
     }
 }
 
