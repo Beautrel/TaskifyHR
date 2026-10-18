@@ -108,7 +108,7 @@ public partial class ProfileViewModel : ObservableObject
     [RelayCommand]
     private async Task LogoutAsync()
     {
-        var confirmed = await Shell.Current.DisplayAlert(
+        var confirmed = await Shell.Current.DisplayAlertAsync(
             "Se déconnecter", "Voulez-vous vraiment vous déconnecter ?", "Se déconnecter", "Annuler");
         if (!confirmed) return;
 

@@ -108,7 +108,7 @@ public partial class LoginViewModel : ObservableObject, IRecipient<AccountCreate
 
     [RelayCommand]
     private async Task ForgotPasswordAsync() =>
-        await Shell.Current.DisplayAlert("Mot de passe oublié", "Cet écran sera ajouté prochainement.", "OK");
+        await Shell.Current.DisplayAlertAsync("Mot de passe oublié", "Cet écran sera ajouté prochainement.", "OK");
 
     [RelayCommand]
     private async Task GoToRegisterAsync() =>
