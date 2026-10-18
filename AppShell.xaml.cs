@@ -13,5 +13,6 @@ public partial class AppShell : Shell
         Routing.RegisterRoute("leave-request", typeof(LeaveRequestPage));
         Routing.RegisterRoute("manager", typeof(ManagerPage));
         Routing.RegisterRoute("register", typeof(RegisterPage));
+        Routing.RegisterRoute("export", typeof(ExportPage));
     }
 }

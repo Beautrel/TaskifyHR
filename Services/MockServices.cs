@@ -187,6 +187,13 @@ public class MockLeaveService : ILeaveService
             .ToList();
     }
 
+    public async Task<IReadOnlyList<LeaveRequest>> GetTeamRequestsAsync()
+    {
+        await Task.Delay(400);
+        ThrowIfFailing();
+        return _requests.ToList();
+    }
+
     public async Task<int> ApproveAsync(Guid requestId, string managerName)
     {
         await Task.Delay(700);

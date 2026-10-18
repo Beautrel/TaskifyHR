@@ -75,4 +75,7 @@ public partial class ManagerViewModel : ObservableObject
 
     [RelayCommand]
     private async Task BackAsync() => await Shell.Current.GoToAsync("..");
+
+    [RelayCommand]
+    private async Task OpenExportAsync() => await Shell.Current.GoToAsync("export");
 }

@@ -50,3 +50,19 @@ public record RegistrationRequest(string FullName, string Email, string Employee
 
 /// <summary>Message envoyé à l'écran de connexion après une inscription réussie (pour préremplir l'e-mail).</summary>
 public record AccountCreatedMessage(string Email);
+
+/// <summary>Format du fichier d'export mensuel.</summary>
+public enum ExportFormat { Pdf, Csv }
+
+/// <summary>Une ligne de l'export : une demande, avec les jours ouvrés qui tombent dans le mois exporté.</summary>
+public record ReportLine(string Employee, string Type, DateOnly Start, DateOnly End,
+                         int WorkingDaysInMonth, LeaveStatus Status);
+
+/// <summary>Contenu de l'export d'un mois.</summary>
+public record MonthlyReport(DateTime Month, string Manager, string Team, IReadOnlyList<ReportLine> Lines)
+{
+    public int ApprovedDays => Lines.Where(l => l.Status == LeaveStatus.Approved).Sum(l => l.WorkingDaysInMonth);
+    public int PendingDays => Lines.Where(l => l.Status == LeaveStatus.Pending).Sum(l => l.WorkingDaysInMonth);
+    public int RefusedCount => Lines.Count(l => l.Status == LeaveStatus.Refused);
+}
+

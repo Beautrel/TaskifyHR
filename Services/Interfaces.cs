@@ -30,6 +30,9 @@ public interface ILeaveService
     // --- Côté manager ---
     Task<IReadOnlyList<PendingApproval>> GetPendingApprovalsAsync();
 
+    /// <summary>Toutes les demandes de l'équipe (tous statuts), pour l'export mensuel.</summary>
+    Task<IReadOnlyList<LeaveRequest>> GetTeamRequestsAsync();
+
     /// <summary>Approuve une demande (le solde est vérifié à la décision). Retourne le nouveau solde de l'employé.</summary>
     Task<int> ApproveAsync(Guid requestId, string managerName);
 
@@ -50,4 +53,13 @@ public interface ILocationService
 {
     /// <summary>Demande la position une seule fois (au clic de pointage) et vérifie la zone.</summary>
     Task<LocationCheck> CheckAsync();
+}
+
+public interface IExportService
+{
+    /// <summary>Crée le fichier d'export (PDF ou CSV) dans le stockage temporaire et retourne son chemin.</summary>
+    Task<string> CreateFileAsync(MonthlyReport report, ExportFormat format);
+
+    /// <summary>Ouvre la feuille de partage Android pour envoyer le fichier (e-mail, WhatsApp, Drive...).</summary>
+    Task ShareAsync(string filePath);
 }

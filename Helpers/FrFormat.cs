@@ -1,4 +1,5 @@
 using System.Globalization;
+using TaskifyHR.Models;
 
 namespace TaskifyHR.Helpers;
 
@@ -6,6 +7,13 @@ namespace TaskifyHR.Helpers;
 public static class FrFormat
 {
     private static readonly CultureInfo Fr = new("fr-FR");
+
+    public static string Status(LeaveStatus status) => status switch
+    {
+        LeaveStatus.Pending => "En attente",
+        LeaveStatus.Approved => "Approuvé",
+        _ => "Refusé"
+    };
 
     public static string LongDate(DateTime date) => date.ToString("d MMMM yyyy", Fr);
 

@@ -41,6 +41,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<ILeaveService, MockLeaveService>();
         builder.Services.AddSingleton<IAttendanceService, MockAttendanceService>();
         builder.Services.AddSingleton<ILocationService, DeviceLocationService>();
+        builder.Services.AddSingleton<IExportService, FileExportService>();
 
         // ViewModels
         builder.Services.AddTransient<LoginViewModel>();
@@ -51,6 +52,7 @@ public static class MauiProgram
         builder.Services.AddTransient<ProfileViewModel>();
         builder.Services.AddTransient<PlanningViewModel>();
         builder.Services.AddTransient<RegisterViewModel>();
+        builder.Services.AddTransient<ExportViewModel>();
 
         // Pages
         builder.Services.AddTransient<LoginPage>();
@@ -61,6 +63,7 @@ public static class MauiProgram
         builder.Services.AddTransient<LeaveRequestPage>();
         builder.Services.AddTransient<ManagerPage>();
         builder.Services.AddTransient<RegisterPage>();
+        builder.Services.AddTransient<ExportPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

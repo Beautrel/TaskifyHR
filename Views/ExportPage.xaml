@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:TaskifyHR.Controls"
+             x:Class="TaskifyHR.Views.ExportPage"
+             Title="Export mensuel">
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Export mensuel" Style="{StaticResource TitleLabel}" />
+                <Label Text="{Binding HeroSubtitle}" Style="{StaticResource BodyLabel}" />
+            </VerticalStackLayout>
+
+            <!-- Chargement -->
+            <HorizontalStackLayout Spacing="8" IsVisible="{Binding IsLoading}">
+                <ActivityIndicator IsRunning="True" Color="{StaticResource Primary}"
+                                   HeightRequest="20" WidthRequest="20" />
+                <Label Text="Chargement des données…" Style="{StaticResource CaptionLabel}"
+                       VerticalOptions="Center" />
+            </HorizontalStackLayout>
+
+            <!-- Accès réservé -->
+            <controls:StateView IsVisible="{Binding IsDenied}"
+                                Title="Accès réservé"
+                                TitleColor="{StaticResource Error}"
+                                Message="Cet espace est réservé aux managers."
+                                ActionText="Retour"
+                                ActionCommand="{Binding BackCommand}" />
+
+            <!-- Erreur de chargement -->
+            <controls:StateView IsVisible="{Binding HasError}"
+                                Title="Erreur de chargement"
+                                TitleColor="{StaticResource Error}"
+                                Message="Impossible de charger les données. Vérifiez votre connexion."
+                                ActionText="Réessayer"
+                                ActionCommand="{Binding LoadCommand}" />
+
+            <VerticalStackLayout Spacing="16" IsVisible="{Binding ShowContent}">
+
+                <!-- Choix du mois -->
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Mois" Style="{StaticResource CaptionLabel}" />
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Button Grid.Column="0" Text="‹ Précédent"
+                                Command="{Binding PreviousMonthCommand}"
+                                Style="{StaticResource LinkButton}" />
+                        <Label Grid.Column="1" Text="{Binding MonthTitle}"
+                               Style="{StaticResource SubtitleLabel}"
+                               HorizontalTextAlignment="Center" VerticalOptions="Center" />
+                        <Button Grid.Column="2" Text="Suivant ›"
+                                Command="{Binding NextMonthCommand}"
+                                Style="{StaticResource LinkButton}" />
+                    </Grid>
+                </VerticalStackLayout>
+
+                <!-- Format -->
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Format" Style="{StaticResource CaptionLabel}" />
+                    <Border Style="{StaticResource Field}">
+                        <Picker ItemsSource="{Binding Formats}" SelectedItem="{Binding SelectedFormat}" />
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Aperçu -->
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Aperçu" Style="{StaticResource CaptionLabel}" />
+                        <Label Text="{Binding SummaryTitle}" Style="{StaticResource SubtitleLabel}" />
+                        <Label Text="{Binding SummaryDetail}" Style="{StaticResource BodyLabel}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Aucune donnée ce mois-ci -->
+                <controls:StateView IsVisible="{Binding IsEmpty}"
+                                    Title="Aucune donnée"
+                                    TitleColor="{StaticResource TextPrimary}"
+                                    Message="Aucune demande de congé sur ce mois. Choisissez un autre mois." />
+
+                <!-- Export en cours -->
+                <controls:StateView IsVisible="{Binding IsBusy}"
+                                    Title="Génération en cours"
+                                    TitleColor="{StaticResource Primary}"
+                                    Message="Création du fichier…"
+                                    IsBusy="True" />
+
+                <!-- Export prêt -->
+                <controls:StateView IsVisible="{Binding HasResult}"
+                                    Title="Export prêt"
+                                    TitleColor="{StaticResource Success}"
+                                    Message="{Binding ResultMessage}" />
+
+                <Label Text="{Binding ExportError}" IsVisible="{Binding HasExportError}"
+                       Style="{StaticResource ErrorLabel}" FontSize="14" />
+
+                <!-- Action principale -->
+                <Button Text="{Binding ExportText}"
+                        Command="{Binding ExportCommand}"
+                        Style="{StaticResource PrimaryButton}" />
+
+                <Label Text="Le fichier est créé sur votre téléphone puis proposé au partage. Les pointages ne figurent pas encore dans l'export."
+                       Style="{StaticResource CaptionLabel}" />
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
