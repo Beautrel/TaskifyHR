@@ -10,6 +10,9 @@ public interface IAuthService
     UserProfile? CurrentUser { get; }
     Task<bool> LoginAsync(string email, string password);
     void Logout();
+
+    /// <summary>Met à jour le téléphone de l'utilisateur connecté (seule donnée modifiable du profil).</summary>
+    Task UpdatePhoneAsync(string phone);
 }
 
 public interface ILeaveService

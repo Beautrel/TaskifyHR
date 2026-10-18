@@ -10,11 +10,17 @@ public class MockAuthService : IAuthService
 {
     private const string DemoPassword = "Taskify2026!";
 
-    private static readonly UserProfile[] Users =
+    // Liste modifiable : un numéro de téléphone enregistré reste visible après une reconnexion.
+    private static readonly List<UserProfile> Users = new()
     {
-        new("Léa Martin", "Léa", "lea.martin@taskify.fr", "Équipe Produit", "Développeuse", "Sophie Bernard", false),
-        new("Sophie Bernard", "Sophie", "sophie.bernard@taskify.fr", "Équipe Produit", "Responsable produit", "Direction", true),
+        new("Léa Martin", "Léa", "lea.martin@taskify.fr", "Équipe Produit", "Développeuse",
+            "Sophie Bernard", false, "TF-042", "CDI", 35, new DateOnly(2025, 6, 2), "06 12 34 56 78"),
+        new("Sophie Bernard", "Sophie", "sophie.bernard@taskify.fr", "Équipe Produit", "Responsable produit",
+            "Direction", true, "TF-007", "CDI", 35, new DateOnly(2022, 9, 1), "06 98 76 54 32"),
     };
+
+    /// <summary>Mettre à true (temporairement) pour tester l'état "Erreur d'enregistrement" du profil.</summary>
+    public bool FailNext { get; set; }
 
     public UserProfile? CurrentUser { get; private set; }
 
@@ -30,6 +36,24 @@ public class MockAuthService : IAuthService
     }
 
     public void Logout() => CurrentUser = null;
+
+    public async Task UpdatePhoneAsync(string phone)
+    {
+        await Task.Delay(700);
+        if (FailNext)
+        {
+            FailNext = false;
+            throw new HttpRequestException("Réseau indisponible (simulation)");
+        }
+        if (CurrentUser is null)
+            return;
+
+        var updated = CurrentUser with { Phone = phone };
+        var index = Users.FindIndex(u => u.Email == CurrentUser.Email);
+        if (index >= 0)
+            Users[index] = updated;
+        CurrentUser = updated;
+    }
 }
 
 public class MockLeaveService : ILeaveService

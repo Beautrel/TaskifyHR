@@ -2,7 +2,8 @@ namespace TaskifyHR.Models;
 
 /// <summary>Utilisateur connecté.</summary>
 public record UserProfile(string FullName, string FirstName, string Email, string Team, string Role,
-                          string ManagerName, bool IsManager);
+                          string ManagerName, bool IsManager,
+                          string EmployeeId, string Contract, int WeeklyHours, DateOnly Arrival, string Phone);
 
 /// <summary>Où en est la journée de pointage.</summary>
 public enum ClockStatus { BeforeEntry, InProgress, Done }

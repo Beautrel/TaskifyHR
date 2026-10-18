@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:TaskifyHR.Controls"
+             x:Class="TaskifyHR.Views.ProfilePage"
+             Title="Mon profil">
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="{Binding FullName}" Style="{StaticResource TitleLabel}" />
+                <Label Text="{Binding Subtitle}" Style="{StaticResource BodyLabel}" />
+            </VerticalStackLayout>
+
+            <!-- Informations RH : lecture seule -->
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Informations RH" Style="{StaticResource SubtitleLabel}" />
+                    <Label Text="{Binding HrLine}" Style="{StaticResource BodyLabel}" />
+                    <Label Text="{Binding ArrivalLine}" Style="{StaticResource BodyLabel}" />
+                    <Label Text="{Binding ManagerLine}" Style="{StaticResource BodyLabel}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- E-mail : lecture seule (champ désactivé) -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Adresse e-mail professionnelle" Style="{StaticResource CaptionLabel}" />
+                <Border Style="{StaticResource Field}" BackgroundColor="{StaticResource PageBackground}">
+                    <Entry Text="{Binding Email}" IsReadOnly="True"
+                           TextColor="{StaticResource TextSecondary}" />
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- Téléphone : modifiable -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Téléphone" Style="{StaticResource CaptionLabel}" />
+                <Border Style="{StaticResource Field}">
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border" Binding="{Binding HasPhoneError}" Value="True">
+                            <Setter Property="Stroke" Value="{StaticResource Error}" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <Entry Text="{Binding Phone}" Keyboard="Telephone" />
+                </Border>
+                <Label Text="{Binding PhoneError}" IsVisible="{Binding HasPhoneError}"
+                       Style="{StaticResource ErrorLabel}" />
+            </VerticalStackLayout>
+
+            <!-- États : enregistré / erreur d'enregistrement -->
+            <controls:StateView IsVisible="{Binding ShowSaved}"
+                                Title="Édition enregistrée"
+                                TitleColor="{StaticResource Success}"
+                                Message="Vos modifications ont été enregistrées." />
+
+            <controls:StateView IsVisible="{Binding HasSaveError}"
+                                Title="Erreur d'enregistrement"
+                                TitleColor="{StaticResource Error}"
+                                Message="Vos modifications n'ont pas été enregistrées. Vérifiez votre connexion et réessayez."
+                                ActionText="Réessayer"
+                                ActionCommand="{Binding SaveCommand}" />
+
+            <!-- Action principale -->
+            <Button Text="{Binding SaveText}"
+                    Command="{Binding SaveCommand}"
+                    Style="{StaticResource PrimaryButton}" />
+
+            <Label Text="Pour modifier vos informations RH, contactez rh@taskify.fr."
+                   Style="{StaticResource CaptionLabel}" />
+
+            <!-- Visible uniquement pour un manager -->
+            <Button Text="Espace manager ›"
+                    Command="{Binding OpenManagerCommand}"
+                    IsVisible="{Binding IsManager}"
+                    Style="{StaticResource LinkButton}" />
+
+            <Button Text="Se déconnecter"
+                    Command="{Binding LogoutCommand}"
+                    Style="{StaticResource SecondaryButton}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
