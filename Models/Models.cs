@@ -1,7 +1,8 @@
 namespace TaskifyHR.Models;
 
 /// <summary>Utilisateur connecté.</summary>
-public record UserProfile(string FullName, string FirstName, string Email, string Team, string Role, string ManagerName);
+public record UserProfile(string FullName, string FirstName, string Email, string Team, string Role,
+                          string ManagerName, bool IsManager);
 
 /// <summary>Où en est la journée de pointage.</summary>
 public enum ClockStatus { BeforeEntry, InProgress, Done }
@@ -39,3 +40,6 @@ public record LeaveRequest(
     LeaveStatus Status,
     string? ValidatedBy = null,
     string? RefusalReason = null);
+
+/// <summary>Demande en attente de décision, avec le solde actuel de l'employé (vu par le manager).</summary>
+public record PendingApproval(LeaveRequest Request, int EmployeeRemaining, bool EmployeeIsFemale);

@@ -28,12 +28,21 @@ public class PlanningPage : PlaceholderPage
     public PlanningPage() : base("Planning") { }
 }
 
-// Le profil contient déjà "Se déconnecter" pour pouvoir tester la boucle connexion → accueil → connexion.
+// Profil provisoire : contient déjà "Espace manager ›" (visible uniquement pour un manager)
+// et "Se déconnecter", pour pouvoir tester tous les parcours.
 public class ProfilePage : ContentPage
 {
+    private readonly IAuthService _auth;
+    private readonly Button _managerButton;
+
     public ProfilePage(IAuthService auth)
     {
+        _auth = auth;
         Title = "Profil";
+
+        _managerButton = new Button { Text = "Espace manager ›", IsVisible = false };
+        _managerButton.Clicked += async (_, _) => await Shell.Current.GoToAsync("manager");
+        UseStyle(_managerButton, "SecondaryButton");
 
         var logout = new Button { Text = "Se déconnecter" };
         logout.Clicked += async (_, _) =>
@@ -41,6 +50,7 @@ public class ProfilePage : ContentPage
             auth.Logout();
             await Shell.Current.GoToAsync("//login");
         };
+        UseStyle(logout, "SecondaryButton");
 
         Content = new VerticalStackLayout
         {
@@ -50,8 +60,22 @@ public class ProfilePage : ContentPage
             {
                 new Label { Text = "Profil", FontSize = 24, FontAttributes = FontAttributes.Bold },
                 new Label { Text = "Écran à venir…" },
+                _managerButton,
                 logout
             }
         };
+    }
+
+    // Règle : l'espace manager n'est proposé qu'au manager.
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        _managerButton.IsVisible = _auth.CurrentUser?.IsManager == true;
+    }
+
+    private static void UseStyle(Button button, string key)
+    {
+        if (Application.Current is { } app && app.Resources.TryGetValue(key, out var value) && value is Style style)
+            button.Style = style;
     }
 }

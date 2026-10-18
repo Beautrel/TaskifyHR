@@ -14,11 +14,21 @@ public interface IAuthService
 
 public interface ILeaveService
 {
+    // --- Côté employé ---
     Task<LeaveBalance> GetBalanceAsync();
     Task<IReadOnlyList<LeaveRequest>> GetMyRequestsAsync();
 
     /// <summary>Enregistre une nouvelle demande (statut En attente). Lève InvalidOperationException en cas de doublon.</summary>
     Task<LeaveRequest> SubmitRequestAsync(LeaveRequest request);
+
+    // --- Côté manager ---
+    Task<IReadOnlyList<PendingApproval>> GetPendingApprovalsAsync();
+
+    /// <summary>Approuve une demande (le solde est vérifié à la décision). Retourne le nouveau solde de l'employé.</summary>
+    Task<int> ApproveAsync(Guid requestId, string managerName);
+
+    /// <summary>Refuse une demande. Le motif est obligatoire ; les jours ne sont pas déduits.</summary>
+    Task RefuseAsync(Guid requestId, string managerName, string reason);
 }
 
 public interface IAttendanceService
