@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Styles réutilisables : textes, boutons, champs, cartes. Aucune police personnalisée :
+     on garde la police système Android (Roboto), donc rien à télécharger (éco-conception). -->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Fond de toutes les pages -->
+    <Style TargetType="ContentPage" ApplyToDerivedTypes="True">
+        <Setter Property="BackgroundColor" Value="{StaticResource PageBackground}" />
+    </Style>
+
+    <!-- Textes -->
+    <Style TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+        <Setter Property="FontSize" Value="16" />
+    </Style>
+    <Style x:Key="TitleLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+    <Style x:Key="SubtitleLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+    <Style x:Key="BodyLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource TextSecondary}" />
+        <Setter Property="FontSize" Value="16" />
+    </Style>
+    <Style x:Key="CaptionLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource TextSecondary}" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+    <Style x:Key="ErrorLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource Error}" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+    <Style x:Key="SuccessLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource Success}" />
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+
+    <!-- Champ de saisie : le Entry est transparent, c'est la bordure qui dessine le champ -->
+    <Style TargetType="Entry">
+        <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+        <Setter Property="PlaceholderColor" Value="{StaticResource TextSecondary}" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="FontSize" Value="16" />
+    </Style>
+    <Style x:Key="Field" TargetType="Border">
+        <Setter Property="Stroke" Value="{StaticResource Outline}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="BackgroundColor" Value="{StaticResource Surface}" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="HeightRequest" Value="52" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="8" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Carte -->
+    <Style x:Key="Card" TargetType="Border">
+        <Setter Property="Stroke" Value="{StaticResource Outline}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="BackgroundColor" Value="{StaticResource Surface}" />
+        <Setter Property="Padding" Value="16" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="8" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Bouton principal : une seule action principale par écran -->
+    <Style x:Key="PrimaryButton" TargetType="Button">
+        <Setter Property="TextColor" Value="{StaticResource White}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="HeightRequest" Value="48" />
+        <Setter Property="Padding" Value="16,0" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource PrimaryPressed}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource DisabledBackground}" />
+                            <Setter Property="TextColor" Value="{StaticResource White}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- Bouton secondaire : contour bleu -->
+    <Style x:Key="SecondaryButton" TargetType="Button">
+        <Setter Property="TextColor" Value="{StaticResource Primary}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource Surface}" />
+        <Setter Property="BorderColor" Value="{StaticResource Primary}" />
+        <Setter Property="BorderWidth" Value="1.5" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="HeightRequest" Value="48" />
+        <Setter Property="Padding" Value="16,0" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource PageBackground}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor" Value="{StaticResource DisabledBackground}" />
+                            <Setter Property="BorderColor" Value="{StaticResource DisabledBackground}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- Lien texte -->
+    <Style x:Key="LinkButton" TargetType="Button">
+        <Setter Property="TextColor" Value="{StaticResource Primary}" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="HeightRequest" Value="44" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalOptions" Value="Start" />
+    </Style>
+</ResourceDictionary>

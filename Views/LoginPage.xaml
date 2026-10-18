@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TaskifyHR.Views.LoginPage"
+             Title="Taskify HR">
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="8">
+
+            <Label Text="Bienvenue" Style="{StaticResource TitleLabel}" Margin="0,16,0,0" />
+            <Label Text="Vos horaires et vos congés, simplement."
+                   Style="{StaticResource BodyLabel}" Margin="0,0,0,16" />
+
+            <!-- E-mail -->
+            <Label Text="Adresse e-mail professionnelle" Style="{StaticResource CaptionLabel}" />
+            <Border Style="{StaticResource Field}">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border" Binding="{Binding HasEmailError}" Value="True">
+                        <Setter Property="Stroke" Value="{StaticResource Error}" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Entry Text="{Binding Email}" Keyboard="Email" Placeholder="prenom.nom@entreprise.fr" />
+            </Border>
+            <Label Text="{Binding EmailError}" IsVisible="{Binding HasEmailError}"
+                   Style="{StaticResource ErrorLabel}" />
+
+            <!-- Mot de passe + afficher/masquer -->
+            <Label Text="Mot de passe" Style="{StaticResource CaptionLabel}" Margin="0,8,0,0" />
+            <Grid>
+                <Border Style="{StaticResource Field}">
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border" Binding="{Binding HasPasswordError}" Value="True">
+                            <Setter Property="Stroke" Value="{StaticResource Error}" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <Entry Text="{Binding Password}" IsPassword="{Binding IsPasswordHidden}"
+                           Margin="0,0,76,0" />
+                </Border>
+                <Button Text="{Binding PasswordToggleText}"
+                        Command="{Binding TogglePasswordCommand}"
+                        Style="{StaticResource LinkButton}"
+                        FontSize="14"
+                        HorizontalOptions="End"
+                        VerticalOptions="Center"
+                        Margin="0,0,8,0" />
+            </Grid>
+            <Label Text="{Binding PasswordError}" IsVisible="{Binding HasPasswordError}"
+                   Style="{StaticResource ErrorLabel}" />
+
+            <Label Text="{Binding FormError}" IsVisible="{Binding HasFormError}"
+                   Style="{StaticResource ErrorLabel}" FontSize="14" />
+
+            <Button Text="Mot de passe oublié ?"
+                    Command="{Binding ForgotPasswordCommand}"
+                    Style="{StaticResource LinkButton}" />
+
+            <!-- Action principale -->
+            <Button Text="{Binding ButtonText}"
+                    Command="{Binding LoginCommand}"
+                    Style="{StaticResource PrimaryButton}"
+                    Margin="0,8,0,0" />
+
+            <!-- Inscription -->
+            <Label Text="Vous n'avez pas encore de compte ?"
+                   Style="{StaticResource BodyLabel}"
+                   HorizontalTextAlignment="Center" Margin="0,24,0,0" />
+            <Button Text="Créer un compte"
+                    Command="{Binding GoToRegisterCommand}"
+                    Style="{StaticResource SecondaryButton}" />
+
+            <Label Text="Taskify HR · Données personnelles protégées"
+                   Style="{StaticResource CaptionLabel}"
+                   HorizontalTextAlignment="Center" Margin="0,16,0,0" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Structure de navigation : Connexion (hors onglets) puis 4 onglets en bas. -->
+<Shell x:Class="TaskifyHR.AppShell"
+       xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:views="clr-namespace:TaskifyHR.Views"
+       Shell.FlyoutBehavior="Disabled"
+       Shell.BackgroundColor="{StaticResource Surface}"
+       Shell.TitleColor="{StaticResource TextPrimary}"
+       Shell.ForegroundColor="{StaticResource Primary}"
+       Shell.TabBarBackgroundColor="{StaticResource Surface}"
+       Shell.TabBarTitleColor="{StaticResource Primary}"
+       Shell.TabBarUnselectedColor="{StaticResource TextSecondary}">
+
+    <ShellContent Route="login"
+                  Title="Taskify HR"
+                  ContentTemplate="{DataTemplate views:LoginPage}" />
+
+    <TabBar Route="main">
+        <ShellContent Route="home" Title="Accueil" ContentTemplate="{DataTemplate views:HomePage}" />
+        <ShellContent Route="balance" Title="Solde" ContentTemplate="{DataTemplate views:BalancePage}" />
+        <ShellContent Route="planning" Title="Planning" ContentTemplate="{DataTemplate views:PlanningPage}" />
+        <ShellContent Route="profile" Title="Profil" ContentTemplate="{DataTemplate views:ProfilePage}" />
+    </TabBar>
+</Shell>

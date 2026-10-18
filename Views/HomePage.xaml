@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:TaskifyHR.Controls"
+             x:Class="TaskifyHR.Views.HomePage"
+             Title="Accueil">
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="{Binding Greeting}" Style="{StaticResource TitleLabel}" />
+                <Label Text="{Binding DateText}" Style="{StaticResource BodyLabel}" />
+            </VerticalStackLayout>
+
+            <!-- État de chargement initial -->
+            <HorizontalStackLayout Spacing="8" IsVisible="{Binding IsLoading}">
+                <ActivityIndicator IsRunning="True" Color="{StaticResource Primary}"
+                                   HeightRequest="20" WidthRequest="20" />
+                <Label Text="Chargement…" Style="{StaticResource CaptionLabel}" VerticalOptions="Center" />
+            </HorizontalStackLayout>
+
+            <!-- Journée en cours -->
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="{Binding WorkedTitle}" Style="{StaticResource SubtitleLabel}" />
+                    <Label Text="{Binding StatusLine}" Style="{StaticResource BodyLabel}" />
+                    <Label Text="{Binding DetailLine}" Style="{StaticResource BodyLabel}" />
+                    <Label Text="Horaire prévu : 09:00 – 17:00" Style="{StaticResource BodyLabel}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Text="{Binding Confirmation}" IsVisible="{Binding HasConfirmation}"
+                   Style="{StaticResource SuccessLabel}" />
+
+            <!-- Action principale de l'écran -->
+            <Button Text="{Binding ClockButtonLabel}"
+                    Command="{Binding ClockCommand}"
+                    Style="{StaticResource PrimaryButton}" />
+
+            <Label Text="{Binding LastSync}" Style="{StaticResource CaptionLabel}" />
+
+            <!-- Erreur réseau / hors zone / localisation refusée -->
+            <controls:StateView IsVisible="{Binding HasError}"
+                                Title="{Binding ErrorTitle}"
+                                TitleColor="{StaticResource Error}"
+                                Message="{Binding ErrorMessage}"
+                                ActionText="{Binding ErrorActionText}"
+                                ActionCommand="{Binding ErrorAction}" />
+
+            <!-- Congés -->
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Congés payés" Style="{StaticResource SubtitleLabel}" />
+                    <Label Text="{Binding BalanceText}" Style="{StaticResource BodyLabel}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Button Text="Demander un congé"
+                    Command="{Binding RequestLeaveCommand}"
+                    Style="{StaticResource SecondaryButton}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
