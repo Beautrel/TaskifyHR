@@ -44,3 +44,9 @@ public record LeaveRequest(
 
 /// <summary>Demande en attente de décision, avec le solde actuel de l'employé (vu par le manager).</summary>
 public record PendingApproval(LeaveRequest Request, int EmployeeRemaining, bool EmployeeIsFemale);
+
+/// <summary>Données saisies sur l'écran d'inscription.</summary>
+public record RegistrationRequest(string FullName, string Email, string EmployeeId, string Password);
+
+/// <summary>Message envoyé à l'écran de connexion après une inscription réussie (pour préremplir l'e-mail).</summary>
+public record AccountCreatedMessage(string Email);

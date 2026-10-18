@@ -1,11 +1,13 @@
 using System.Text.RegularExpressions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using TaskifyHR.Models;
 using TaskifyHR.Services;
 
 namespace TaskifyHR.ViewModels;
 
-public partial class LoginViewModel : ObservableObject
+public partial class LoginViewModel : ObservableObject, IRecipient<AccountCreatedMessage>
 {
     private static readonly Regex EmailRegex = new(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.Compiled);
     private readonly IAuthService _auth;
@@ -13,6 +15,17 @@ public partial class LoginViewModel : ObservableObject
     public LoginViewModel(IAuthService auth)
     {
         _auth = auth;
+        WeakReferenceMessenger.Default.Register(this); // écoute "compte créé"
+    }
+
+    // Reçu depuis l'écran d'inscription : on préremplit l'e-mail du nouveau compte.
+    public void Receive(AccountCreatedMessage message)
+    {
+        Email = message.Email;
+        Password = "";
+        EmailError = "";
+        PasswordError = "";
+        FormError = "";
     }
 
     // [ObservableProperty] génère automatiquement la propriété publique (Email, Password...)
@@ -99,5 +112,5 @@ public partial class LoginViewModel : ObservableObject
 
     [RelayCommand]
     private async Task GoToRegisterAsync() =>
-        await Shell.Current.DisplayAlert("Inscription", "Cet écran sera ajouté prochainement.", "OK");
+        await Shell.Current.GoToAsync("register");
 }

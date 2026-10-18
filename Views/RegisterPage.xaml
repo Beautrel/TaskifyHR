@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:TaskifyHR.Controls"
+             x:Class="TaskifyHR.Views.RegisterPage"
+             Title="Créer un compte">
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12">
+
+            <!-- ============ FORMULAIRE ============ -->
+            <VerticalStackLayout Spacing="12" IsVisible="{Binding IsFormVisible}">
+
+                <VerticalStackLayout Spacing="4" Margin="0,8,0,8">
+                    <Label Text="Rejoignez Taskify HR" Style="{StaticResource TitleLabel}" />
+                    <Label Text="Votre compte professionnel." Style="{StaticResource BodyLabel}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Nom complet" Style="{StaticResource CaptionLabel}" />
+                    <Border Style="{StaticResource Field}">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding HasFullNameError}" Value="True">
+                                <Setter Property="Stroke" Value="{StaticResource Error}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Entry Text="{Binding FullName}" Placeholder="Prénom Nom" />
+                    </Border>
+                    <Label Text="{Binding FullNameError}" IsVisible="{Binding HasFullNameError}"
+                           Style="{StaticResource ErrorLabel}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Adresse e-mail professionnelle" Style="{StaticResource CaptionLabel}" />
+                    <Border Style="{StaticResource Field}">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding HasEmailError}" Value="True">
+                                <Setter Property="Stroke" Value="{StaticResource Error}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Entry Text="{Binding Email}" Keyboard="Email" Placeholder="prenom.nom@entreprise.fr" />
+                    </Border>
+                    <Label Text="{Binding EmailError}" IsVisible="{Binding HasEmailError}"
+                           Style="{StaticResource ErrorLabel}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Matricule" Style="{StaticResource CaptionLabel}" />
+                    <Border Style="{StaticResource Field}">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding HasEmployeeIdError}" Value="True">
+                                <Setter Property="Stroke" Value="{StaticResource Error}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Entry Text="{Binding EmployeeId}" Placeholder="TF-042" />
+                    </Border>
+                    <Label Text="{Binding EmployeeIdError}" IsVisible="{Binding HasEmployeeIdError}"
+                           Style="{StaticResource ErrorLabel}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Mot de passe" Style="{StaticResource CaptionLabel}" />
+                    <Border Style="{StaticResource Field}">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding HasPasswordError}" Value="True">
+                                <Setter Property="Stroke" Value="{StaticResource Error}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Entry Text="{Binding Password}" IsPassword="True" />
+                    </Border>
+                    <Label Text="{Binding PasswordError}" IsVisible="{Binding HasPasswordError}"
+                           Style="{StaticResource ErrorLabel}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Confirmer le mot de passe" Style="{StaticResource CaptionLabel}" />
+                    <Border Style="{StaticResource Field}">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding HasConfirmError}" Value="True">
+                                <Setter Property="Stroke" Value="{StaticResource Error}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Entry Text="{Binding ConfirmPassword}" IsPassword="True" />
+                    </Border>
+                    <Label Text="{Binding ConfirmError}" IsVisible="{Binding HasConfirmError}"
+                           Style="{StaticResource ErrorLabel}" />
+                </VerticalStackLayout>
+
+                <!-- État : erreur de saisie -->
+                <controls:StateView IsVisible="{Binding HasAnyError}"
+                                    Title="Erreur de saisie"
+                                    TitleColor="{StaticResource Error}"
+                                    Message="Corrigez les champs indiqués pour créer votre compte." />
+
+                <!-- Erreur renvoyée par le serveur (e-mail ou matricule déjà utilisé, réseau) -->
+                <Label Text="{Binding ServerError}" IsVisible="{Binding HasServerError}"
+                       Style="{StaticResource ErrorLabel}" FontSize="14" />
+
+                <Label Text="12 caractères, une majuscule et un chiffre. En continuant, vous acceptez la confidentialité."
+                       Style="{StaticResource CaptionLabel}" />
+
+                <!-- Action principale : désactivée tant que le formulaire est invalide -->
+                <Button Text="{Binding SubmitText}"
+                        Command="{Binding SubmitCommand}"
+                        Style="{StaticResource PrimaryButton}" />
+
+                <Button Text="Déjà inscrit·e ? Se connecter"
+                        Command="{Binding GoToLoginCommand}"
+                        Style="{StaticResource LinkButton}"
+                        HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <!-- ============ COMPTE CRÉÉ ============ -->
+            <VerticalStackLayout Spacing="12" IsVisible="{Binding IsCreated}">
+                <controls:StateView Title="Compte créé"
+                                    TitleColor="{StaticResource Success}"
+                                    Message="Votre compte a été créé. Vous pouvez maintenant vous connecter." />
+                <Button Text="Se connecter"
+                        Command="{Binding GoToLoginCommand}"
+                        Style="{StaticResource PrimaryButton}" />
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

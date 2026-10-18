@@ -12,5 +12,6 @@ public partial class AppShell : Shell
         // puis on y navigue avec Shell.Current.GoToAsync("<route>").
         Routing.RegisterRoute("leave-request", typeof(LeaveRequestPage));
         Routing.RegisterRoute("manager", typeof(ManagerPage));
+        Routing.RegisterRoute("register", typeof(RegisterPage));
     }
 }

@@ -11,6 +11,9 @@ public interface IAuthService
     Task<bool> LoginAsync(string email, string password);
     void Logout();
 
+    /// <summary>Crée un compte. Lève InvalidOperationException si l'e-mail ou le matricule existe déjà.</summary>
+    Task RegisterAsync(RegistrationRequest request);
+
     /// <summary>Met à jour le téléphone de l'utilisateur connecté (seule donnée modifiable du profil).</summary>
     Task UpdatePhoneAsync(string phone);
 }

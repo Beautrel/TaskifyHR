@@ -4,13 +4,13 @@ namespace TaskifyHR.Services;
 
 /// <summary>
 /// Connexion fictive. Deux comptes de démonstration (même mot de passe) :
-/// Léa (employée) et Sophie (manager).
+/// Léa (employée) et Sophie (manager). Les comptes créés par l'inscription fonctionnent aussi.
 /// </summary>
 public class MockAuthService : IAuthService
 {
     private const string DemoPassword = "Taskify2026!";
 
-    // Liste modifiable : un numéro de téléphone enregistré reste visible après une reconnexion.
+    // Listes modifiables : les changements restent visibles après une reconnexion.
     private static readonly List<UserProfile> Users = new()
     {
         new("Léa Martin", "Léa", "lea.martin@taskify.fr", "Équipe Produit", "Développeuse",
@@ -19,7 +19,14 @@ public class MockAuthService : IAuthService
             "Direction", true, "TF-007", "CDI", 35, new DateOnly(2022, 9, 1), "06 98 76 54 32"),
     };
 
-    /// <summary>Mettre à true (temporairement) pour tester l'état "Erreur d'enregistrement" du profil.</summary>
+    // Maquette uniquement : une vraie API ne stocke JAMAIS un mot de passe en clair, seulement un hash.
+    private static readonly Dictionary<string, string> Passwords = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["lea.martin@taskify.fr"] = DemoPassword,
+        ["sophie.bernard@taskify.fr"] = DemoPassword,
+    };
+
+    /// <summary>Mettre à true (temporairement) pour tester une erreur réseau (inscription, profil).</summary>
     public bool FailNext { get; set; }
 
     public UserProfile? CurrentUser { get; private set; }
@@ -28,7 +35,7 @@ public class MockAuthService : IAuthService
     {
         await Task.Delay(800); // simule le temps réseau (visible : état "Chargement")
         var user = Users.FirstOrDefault(u => string.Equals(u.Email, email.Trim(), StringComparison.OrdinalIgnoreCase));
-        if (user is null || password != DemoPassword)
+        if (user is null || !Passwords.TryGetValue(user.Email, out var expected) || expected != password)
             return false;
 
         CurrentUser = user;
@@ -37,14 +44,32 @@ public class MockAuthService : IAuthService
 
     public void Logout() => CurrentUser = null;
 
+    public async Task RegisterAsync(RegistrationRequest request)
+    {
+        await Task.Delay(900);
+        ThrowIfFailing();
+
+        var email = request.Email.Trim();
+        var employeeId = request.EmployeeId.Trim().ToUpperInvariant();
+
+        // Règle : e-mail unique et matricule unique
+        if (Users.Any(u => string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase)))
+            throw new InvalidOperationException("Un compte existe déjà avec cette adresse e-mail.");
+        if (Users.Any(u => string.Equals(u.EmployeeId, employeeId, StringComparison.OrdinalIgnoreCase)))
+            throw new InvalidOperationException("Ce matricule est déjà utilisé.");
+
+        var fullName = request.FullName.Trim();
+        var firstName = fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries)[0];
+        Users.Add(new UserProfile(fullName, firstName, email, "Équipe Produit", "Employé",
+                                  "Sophie Bernard", false, employeeId, "CDI", 35,
+                                  DateOnly.FromDateTime(DateTime.Today), ""));
+        Passwords[email] = request.Password;
+    }
+
     public async Task UpdatePhoneAsync(string phone)
     {
         await Task.Delay(700);
-        if (FailNext)
-        {
-            FailNext = false;
-            throw new HttpRequestException("Réseau indisponible (simulation)");
-        }
+        ThrowIfFailing();
         if (CurrentUser is null)
             return;
 
@@ -53,6 +78,13 @@ public class MockAuthService : IAuthService
         if (index >= 0)
             Users[index] = updated;
         CurrentUser = updated;
+    }
+
+    private void ThrowIfFailing()
+    {
+        if (!FailNext) return;
+        FailNext = false;
+        throw new HttpRequestException("Réseau indisponible (simulation)");
     }
 }
 

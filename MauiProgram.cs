@@ -50,6 +50,7 @@ public static class MauiProgram
         builder.Services.AddTransient<ManagerViewModel>();
         builder.Services.AddTransient<ProfileViewModel>();
         builder.Services.AddTransient<PlanningViewModel>();
+        builder.Services.AddTransient<RegisterViewModel>();
 
         // Pages
         builder.Services.AddTransient<LoginPage>();
@@ -59,6 +60,7 @@ public static class MauiProgram
         builder.Services.AddTransient<ProfilePage>();
         builder.Services.AddTransient<LeaveRequestPage>();
         builder.Services.AddTransient<ManagerPage>();
+        builder.Services.AddTransient<RegisterPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();
