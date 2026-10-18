@@ -16,6 +16,9 @@ public interface ILeaveService
 {
     Task<LeaveBalance> GetBalanceAsync();
     Task<IReadOnlyList<LeaveRequest>> GetMyRequestsAsync();
+
+    /// <summary>Enregistre une nouvelle demande (statut En attente). Lève InvalidOperationException en cas de doublon.</summary>
+    Task<LeaveRequest> SubmitRequestAsync(LeaveRequest request);
 }
 
 public interface IAttendanceService

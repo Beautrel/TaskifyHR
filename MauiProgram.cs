@@ -12,9 +12,23 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder.UseMauiApp<App>();
 
-        // Android : retire le soulignement par défaut des champs de saisie
+        // Android : retire le soulignement par défaut des champs de saisie, listes et sélecteurs de date
         // (le champ est dessiné par la bordure du style "Field").
         Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+        {
+#if ANDROID
+            handler.PlatformView.BackgroundTintList =
+                Android.Content.Res.ColorStateList.ValueOf(Android.Graphics.Color.Transparent);
+#endif
+        });
+        Microsoft.Maui.Handlers.DatePickerHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+        {
+#if ANDROID
+            handler.PlatformView.BackgroundTintList =
+                Android.Content.Res.ColorStateList.ValueOf(Android.Graphics.Color.Transparent);
+#endif
+        });
+        Microsoft.Maui.Handlers.PickerHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
         {
 #if ANDROID
             handler.PlatformView.BackgroundTintList =
@@ -32,6 +46,7 @@ public static class MauiProgram
         builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<HomeViewModel>();
         builder.Services.AddTransient<BalanceViewModel>();
+        builder.Services.AddTransient<LeaveRequestViewModel>();
 
         // Pages
         builder.Services.AddTransient<LoginPage>();
@@ -39,6 +54,7 @@ public static class MauiProgram
         builder.Services.AddTransient<BalancePage>();
         builder.Services.AddTransient<PlanningPage>();
         builder.Services.AddTransient<ProfilePage>();
+        builder.Services.AddTransient<LeaveRequestPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

@@ -1,7 +1,7 @@
 namespace TaskifyHR.Models;
 
 /// <summary>Utilisateur connecté.</summary>
-public record UserProfile(string FullName, string FirstName, string Email, string Team, string Role);
+public record UserProfile(string FullName, string FirstName, string Email, string Team, string Role, string ManagerName);
 
 /// <summary>Où en est la journée de pointage.</summary>
 public enum ClockStatus { BeforeEntry, InProgress, Done }
@@ -17,6 +17,14 @@ public record LeaveBalance(int Acquired, int Used, int Pending, string Period)
 
 /// <summary>Statut d'une demande de congé.</summary>
 public enum LeaveStatus { Pending, Approved, Refused }
+
+/// <summary>Types de congé. Seuls les congés payés consomment le solde.</summary>
+public static class LeaveTypes
+{
+    public const string Paid = "Congés payés";
+    public const string Unpaid = "Congé sans solde";
+    public static readonly string[] All = { Paid, Unpaid };
+}
 
 /// <summary>Une demande de congé.</summary>
 public record LeaveRequest(

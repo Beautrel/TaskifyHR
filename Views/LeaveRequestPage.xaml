@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:TaskifyHR.Controls"
+             x:Class="TaskifyHR.Views.LeaveRequestPage"
+             Title="Demande de congé">
+    <ScrollView x:Name="MainScroll">
+        <VerticalStackLayout Padding="16" Spacing="12">
+
+            <Button Text="‹ Retour au solde"
+                    Command="{Binding BackCommand}"
+                    Style="{StaticResource LinkButton}" />
+
+            <!-- ============ FORMULAIRE ============ -->
+            <VerticalStackLayout Spacing="12" IsVisible="{Binding IsFormVisible}">
+
+                <!-- Type -->
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Type de congé" Style="{StaticResource CaptionLabel}" />
+                    <Border Style="{StaticResource Field}">
+                        <Picker ItemsSource="{Binding Types}" SelectedItem="{Binding LeaveType}" />
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Date de début -->
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Date de début" Style="{StaticResource CaptionLabel}" />
+                    <Border Style="{StaticResource Field}">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding HasStartError}" Value="True">
+                                <Setter Property="Stroke" Value="{StaticResource Error}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <DatePicker Date="{Binding StartDate}" Format="dd/MM/yyyy" />
+                    </Border>
+                    <Label Text="{Binding StartError}" IsVisible="{Binding HasStartError}"
+                           Style="{StaticResource ErrorLabel}" />
+                </VerticalStackLayout>
+
+                <!-- Date de fin -->
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Date de fin" Style="{StaticResource CaptionLabel}" />
+                    <Border Style="{StaticResource Field}">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding HasEndError}" Value="True">
+                                <Setter Property="Stroke" Value="{StaticResource Error}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <DatePicker Date="{Binding EndDate}" Format="dd/MM/yyyy" />
+                    </Border>
+                    <Label Text="{Binding EndError}" IsVisible="{Binding HasEndError}"
+                           Style="{StaticResource ErrorLabel}" />
+                </VerticalStackLayout>
+
+                <!-- Motif -->
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Motif (facultatif)" Style="{StaticResource CaptionLabel}" />
+                    <Border Style="{StaticResource Field}">
+                        <Entry Text="{Binding Reason}" Placeholder="Ex. : repos personnel" />
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Récapitulatif -->
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="{Binding SummaryTitle}" Style="{StaticResource SubtitleLabel}" />
+                        <Label Text="{Binding SummaryDetail}" Style="{StaticResource BodyLabel}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- État : champs invalides -->
+                <controls:StateView IsVisible="{Binding HasDateError}"
+                                    Title="Champs invalides"
+                                    TitleColor="{StaticResource Error}"
+                                    Message="Vérifiez les dates de votre demande." />
+
+                <!-- État : solde insuffisant -->
+                <controls:StateView IsVisible="{Binding IsInsufficient}"
+                                    Title="Solde insuffisant"
+                                    TitleColor="{StaticResource Error}"
+                                    Message="{Binding InsufficientMessage}"
+                                    ActionText="Modifier les dates"
+                                    ActionCommand="{Binding EditDatesCommand}" />
+
+                <!-- État : envoi en cours -->
+                <controls:StateView IsVisible="{Binding IsSending}"
+                                    Title="Envoi en cours"
+                                    TitleColor="{StaticResource Primary}"
+                                    Message="{Binding SendingMessage}"
+                                    IsBusy="True" />
+
+                <!-- Erreur générale (doublon, période sans jour ouvré, réseau) -->
+                <Label Text="{Binding FormError}" IsVisible="{Binding HasFormError}"
+                       Style="{StaticResource ErrorLabel}" FontSize="14" />
+
+                <Label Text="{Binding ManagerText}" Style="{StaticResource CaptionLabel}" />
+
+                <!-- Action principale -->
+                <Button Text="{Binding SubmitText}"
+                        Command="{Binding SubmitCommand}"
+                        Style="{StaticResource PrimaryButton}" />
+            </VerticalStackLayout>
+
+            <!-- ============ DEMANDE ENVOYÉE ============ -->
+            <VerticalStackLayout Spacing="12" IsVisible="{Binding IsSent}">
+                <controls:StateView Title="Demande envoyée"
+                                    TitleColor="{StaticResource Success}"
+                                    Message="{Binding SentMessage}" />
+                <controls:StatusBadge Status="Pending" />
+                <Button Text="Voir mes demandes"
+                        Command="{Binding ViewMyRequestsCommand}"
+                        Style="{StaticResource SecondaryButton}" />
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

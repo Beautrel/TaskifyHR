@@ -16,7 +16,8 @@ public class MockAuthService : IAuthService
         var ok = string.Equals(email.Trim(), DemoEmail, StringComparison.OrdinalIgnoreCase)
                  && password == DemoPassword;
         if (ok)
-            CurrentUser = new UserProfile("Léa Martin", "Léa", DemoEmail, "Équipe Produit", "Développeuse");
+            CurrentUser = new UserProfile("Léa Martin", "Léa", DemoEmail, "Équipe Produit",
+                                          "Développeuse", "Sophie Bernard");
         return ok;
     }
 
@@ -25,14 +26,17 @@ public class MockAuthService : IAuthService
 
 public class MockLeaveService : ILeaveService
 {
+    private const int AcquiredDays = 20;
+    private const string Period = "juin 2026 – mai 2027";
+
     private readonly List<LeaveRequest> _requests = new()
     {
         new(Guid.NewGuid(), "Léa Martin", "Équipe Produit",
             new DateOnly(2026, 10, 19), new DateOnly(2026, 10, 21), 3,
-            "Congés payés", "Repos personnel", LeaveStatus.Pending),
+            LeaveTypes.Paid, "Repos personnel", LeaveStatus.Pending),
         new(Guid.NewGuid(), "Léa Martin", "Équipe Produit",
             new DateOnly(2026, 8, 5), new DateOnly(2026, 8, 14), 8,
-            "Congés payés", "Vacances", LeaveStatus.Approved, ValidatedBy: "Sophie Bernard"),
+            LeaveTypes.Paid, "Vacances", LeaveStatus.Approved, ValidatedBy: "Sophie Bernard"),
     };
 
     /// <summary>Mettre à true (temporairement) pour tester l'état "Solde à zéro".</summary>
@@ -41,16 +45,21 @@ public class MockLeaveService : ILeaveService
     /// <summary>Mettre à true (temporairement) pour tester l'état "Liste vide".</summary>
     public bool SimulateEmptyList { get; set; }
 
-    /// <summary>Mettre à true (temporairement) pour tester l'état "Erreur de chargement".</summary>
+    /// <summary>Mettre à true (temporairement) pour tester une erreur réseau (chargement ou envoi).</summary>
     public bool FailNext { get; set; }
 
     public async Task<LeaveBalance> GetBalanceAsync()
     {
         await Task.Delay(300);
         ThrowIfFailing();
-        return SimulateZeroBalance
-            ? new LeaveBalance(20, 20, 0, "juin 2026 – mai 2027")
-            : new LeaveBalance(20, 8, 3, "juin 2026 – mai 2027"); // mêmes chiffres que les maquettes
+
+        if (SimulateZeroBalance)
+            return new LeaveBalance(AcquiredDays, AcquiredDays, 0, Period);
+
+        // Les compteurs sont calculés à partir des demandes : ils bougent quand on envoie une demande.
+        var used = _requests.Where(r => r.Status == LeaveStatus.Approved && r.Type == LeaveTypes.Paid).Sum(r => r.Days);
+        var pending = _requests.Where(r => r.Status == LeaveStatus.Pending && r.Type == LeaveTypes.Paid).Sum(r => r.Days);
+        return new LeaveBalance(AcquiredDays, used, pending, Period);
     }
 
     public async Task<IReadOnlyList<LeaveRequest>> GetMyRequestsAsync()
@@ -58,6 +67,21 @@ public class MockLeaveService : ILeaveService
         await Task.Delay(300);
         ThrowIfFailing();
         return SimulateEmptyList ? new List<LeaveRequest>() : _requests.ToList();
+    }
+
+    public async Task<LeaveRequest> SubmitRequestAsync(LeaveRequest request)
+    {
+        await Task.Delay(900);
+        ThrowIfFailing();
+
+        // Pas de doublon : même contrôle que côté serveur
+        var overlap = _requests.Any(r => r.Status != LeaveStatus.Refused
+                                         && r.Start <= request.End && request.Start <= r.End);
+        if (overlap)
+            throw new InvalidOperationException("Une demande existe déjà sur cette période.");
+
+        _requests.Insert(0, request);
+        return request;
     }
 
     private void ThrowIfFailing()

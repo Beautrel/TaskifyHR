@@ -138,7 +138,7 @@ public partial class HomeViewModel : ObservableObject
 
     [RelayCommand]
     private async Task RequestLeaveAsync() =>
-        await Shell.Current.DisplayAlert("Demande de congé", "Cet écran sera ajouté prochainement.", "OK");
+        await Shell.Current.GoToAsync("leave-request");
 
     // ----- Utilitaires -----
 

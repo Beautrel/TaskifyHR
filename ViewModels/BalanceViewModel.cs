@@ -68,7 +68,7 @@ public partial class BalanceViewModel : ObservableObject
 
     [RelayCommand(CanExecute = nameof(CanRequest))]
     private async Task RequestLeaveAsync() =>
-        await Shell.Current.DisplayAlert("Demande de congé", "Cet écran sera ajouté prochainement.", "OK");
+        await Shell.Current.GoToAsync("leave-request");
 
     private static LeaveRequestItem ToItem(LeaveRequest r) => new(
         DateRange: FrFormat.DateRange(r.Start, r.End),

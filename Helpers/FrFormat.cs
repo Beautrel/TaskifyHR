@@ -9,6 +9,8 @@ public static class FrFormat
 
     public static string LongDate(DateTime date) => date.ToString("d MMMM yyyy", Fr);
 
+    public static string ShortDate(DateTime date) => date.ToString("d MMMM", Fr);
+
     public static string DateRange(DateOnly start, DateOnly end)
     {
         if (start == end)
