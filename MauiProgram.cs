@@ -36,10 +36,20 @@ public static class MauiProgram
 #endif
         });
 
-        // Services (données fictives pour l'instant : on branchera une vraie API plus tard)
-        builder.Services.AddSingleton<IAuthService, MockAuthService>();
-        builder.Services.AddSingleton<ILeaveService, MockLeaveService>();
-        builder.Services.AddSingleton<IAttendanceService, MockAttendanceService>();
+        // Services : vraie API Django (ApiConfig.UseApi = true) ou données fictives (secours)
+        if (ApiConfig.UseApi)
+        {
+            builder.Services.AddSingleton<ApiClient>();
+            builder.Services.AddSingleton<IAuthService, ApiAuthService>();
+            builder.Services.AddSingleton<ILeaveService, ApiLeaveService>();
+            builder.Services.AddSingleton<IAttendanceService, ApiAttendanceService>();
+        }
+        else
+        {
+            builder.Services.AddSingleton<IAuthService, MockAuthService>();
+            builder.Services.AddSingleton<ILeaveService, MockLeaveService>();
+            builder.Services.AddSingleton<IAttendanceService, MockAttendanceService>();
+        }
         builder.Services.AddSingleton<ILocationService, DeviceLocationService>();
         builder.Services.AddSingleton<IExportService, FileExportService>();
 

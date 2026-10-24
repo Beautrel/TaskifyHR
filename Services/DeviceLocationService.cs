@@ -16,8 +16,23 @@ public class DeviceLocationService : ILocationService
     private static readonly Location Site = new(4.0511, 9.7679); // lieu de travail fictif
     private const double RadiusKm = 0.2;
 
+    /// <summary>Dernière position lue (envoyée à l'API au pointage).</summary>
+    public static Location? LastPosition { get; private set; }
+
+    /// <summary>
+    /// Position envoyée au serveur. En mode démo, on envoie celle du lieu de travail
+    /// (le serveur refuse sinon tout pointage fait hors de la zone de 200 m).
+    /// </summary>
+    public static (double Latitude, double Longitude) ServerPosition =>
+        DemoMode || LastPosition is null
+            ? (Site.Latitude, Site.Longitude)
+            : (LastPosition.Latitude, LastPosition.Longitude);
+
     public async Task<LocationCheck> CheckAsync()
     {
+#if WINDOWS
+        return LocationCheck.InZone;
+#endif
         var status = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
         if (status != PermissionStatus.Granted)
             status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
@@ -31,6 +46,7 @@ public class DeviceLocationService : ILocationService
             if (position is null)
                 return LocationCheck.Unavailable;
 
+            LastPosition = position;
             if (DemoMode)
                 return LocationCheck.InZone;
 
