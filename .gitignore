@@ -10,3 +10,4 @@ obj/
 # OS-generated files
 .DS_Store
 *.apk
+*.zip
